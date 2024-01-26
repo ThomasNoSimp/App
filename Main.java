@@ -9,12 +9,26 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            ImageIcon icon = new ImageIcon("icon.png");
             JFrame frame = new JFrame("App");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 400);
+            frame.setIconImage(icon.getImage()); // Set the icon
 
             JPanel panel = new JPanel(new GridBagLayout());
             panel.setBackground(Color.LIGHT_GRAY);
+
+            GridBagConstraints modeGbc = new GridBagConstraints();
+            modeGbc.gridx = 0;
+            modeGbc.gridy = 0;
+            modeGbc.insets = new Insets(10, 10, 10, 10); // Add some padding
+
+            JPanel calculatorPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints calculatorGbc = new GridBagConstraints();
+            calculatorGbc.gridx = 0;
+            calculatorGbc.gridy = 1;
+            calculatorGbc.insets = new Insets(10, 10, 10, 10); // Add some padding
+            panel.add(calculatorPanel, calculatorGbc);
 
             JButton signUpButton = createButton("Sign Up");
             JButton loginButton = createButton("Login");
@@ -24,11 +38,11 @@ public class Main {
 
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
-            gbc.gridy = 0;
+            gbc.gridy = 2;
             gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
             panel.add(signUpButton, gbc);
 
-            gbc.gridy = 1;
+            gbc.gridy = 3;
             panel.add(loginButton, gbc);
 
             frame.setContentPane(panel);
@@ -74,7 +88,8 @@ public class Main {
                 }
                 if (found) {
                     JOptionPane.showMessageDialog(null, "Login successful!");
-                    displayDashboard(frame);
+                    // Display standard calculator interface by default
+                    displayStandardCalculator(frame.getContentPane());
                 } else {
                     JOptionPane.showMessageDialog(null, "Login failed. Incorrect username or password.");
                 }
@@ -84,115 +99,78 @@ public class Main {
         }
     }
 
-    private static void displayDashboard(JFrame frame) {
-        JPanel dashboardPanel = new JPanel(new GridBagLayout());
-        dashboardPanel.setBackground(Color.LIGHT_GRAY);
+    private static void displayStandardCalculator(Container calculatorPanel) {
+        // Clear the calculator panel
+        calculatorPanel.removeAll();
     
-        JButton calculatorButton = createButton("Calculator");
-        JButton donateButton = createButton("Donate");
-        JButton contactUsButton = createButton("Contact Us");
-        JButton logoutButton = createButton("Log Out");
-    
-        calculatorButton.addActionListener(e -> {
-            displayCalculator(frame);
-        });
-    
-        logoutButton.addActionListener(e -> {
-            frame.dispose(); // Dispose of the current frame
-            // Show the login/signup frame again
-            JFrame loginSignupFrame = new JFrame("Login/Signup");
-            loginSignupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            loginSignupFrame.setSize(400, 400);
-    
-            JPanel panel = new JPanel(new GridBagLayout());
-            panel.setBackground(Color.LIGHT_GRAY);
-    
-            JButton signUpButton = createButton("Sign Up");
-            JButton loginButton = createButton("Login");
-    
-            signUpButton.addActionListener(ev -> signUpUser());
-            loginButton.addActionListener(ev -> loginUser(loginSignupFrame));
-    
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
-            panel.add(signUpButton, gbc);
-    
-            gbc.gridy = 1;
-            panel.add(loginButton, gbc);
-    
-            loginSignupFrame.setContentPane(panel);
-            loginSignupFrame.setLocationRelativeTo(null); // Center the frame on the screen
-            loginSignupFrame.setVisible(true);
-        });
-    
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.CENTER;
-    
-        dashboardPanel.add(calculatorButton, gbc);
-    
-        gbc.gridy = 1;
-        dashboardPanel.add(donateButton, gbc);
-    
-        gbc.gridy = 2;
-        dashboardPanel.add(contactUsButton, gbc);
-    
-        gbc.gridy = 3;
-        dashboardPanel.add(logoutButton, gbc);
-    
-        frame.setContentPane(dashboardPanel);
-        frame.revalidate();
-    }    
-
-    private static void displayCalculator(JFrame frame) {
-        JPanel calculatorPanel = new JPanel(new GridBagLayout());
-        calculatorPanel.setBackground(Color.LIGHT_GRAY);
-    
+        JComboBox<String> modeDropdown = new JComboBox<>(new String[]{"Mode 1", "Mode 2", "Mode 3"});
         JTextField inputField = new JTextField();
         inputField.setPreferredSize(new Dimension(300, 50));
         inputField.setHorizontalAlignment(JTextField.RIGHT);
         inputField.setFont(new Font("Arial", Font.PLAIN, 20));
     
+        // Create a panel for the input field and dropdown list
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints inputGbc = new GridBagConstraints();
+        inputGbc.gridx = 0;
+        inputGbc.gridy = 0;
+        inputPanel.add(inputField, inputGbc);
+        
+        inputGbc.gridy = 1;
+        inputPanel.add(modeDropdown, inputGbc);
+    
+        // Add the input panel to the calculator panel
+        calculatorPanel.add(inputPanel);
+    
         // Disable direct input
         inputField.setEditable(false);
     
-        JPanel buttonPanel = new JPanel(new GridLayout(5, 4, 5, 5));
+        JPanel buttonPanel = new JPanel(new GridLayout(5, 4, 5, 5)); // Increase rows to accommodate additional buttons
     
         String[] buttonLabels = {
                 "7", "8", "9", "+",
                 "4", "5", "6", "-",
                 "1", "2", "3", "*",
                 "0", ".", "=", "/",
-                "C", "Del" // Added "C" and "Del" buttons
+                "C", "Del" // Add "C" and "Del" buttons
         };
+    
+        modeDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedMode = (String) modeDropdown.getSelectedItem();
+                switch (selectedMode) {
+                    case "Mode 1":
+                        displayStandardCalculator(calculatorPanel);
+                        break;
+                    case "Mode 2":
+                        displayScientificCalculator(calculatorPanel);
+                        break;
+                    case "Mode 3":
+                        // Display programmer calculator interface
+                        break;
+                }
+                modeDropdown.setSelectedItem(selectedMode); // Update the selected item
+            }
+        });
+        
     
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String buttonText = ((JButton) e.getSource()).getText();
-    
-                    switch (buttonText) {
-                        case "=":
-                            calculate(inputField);
-                            break;
-                        case "C":
-                            inputField.setText("");
-                            break;
-                        case "Del":
-                            String currentText = inputField.getText();
-                            if (!currentText.isEmpty()) {
-                                inputField.setText(currentText.substring(0, currentText.length() - 1));
-                            }
-                            break;
-                        default:
-                            inputField.setText(inputField.getText() + buttonText);
-                            break;
+                    if (buttonText.equals("=")) {
+                        calculate(inputField);
+                    } else if (buttonText.equals("C")) {
+                        inputField.setText("");
+                    } else if (buttonText.equals("Del")) {
+                        String currentText = inputField.getText();
+                        if (!currentText.isEmpty()) {
+                            inputField.setText(currentText.substring(0, currentText.length() - 1));
+                        }
+                    } else {
+                        inputField.setText(inputField.getText() + buttonText);
                     }
                 }
             });
@@ -201,15 +179,122 @@ public class Main {
     
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
-        calculatorPanel.add(inputField, gbc);
-    
         gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
         calculatorPanel.add(buttonPanel, gbc);
     
-        frame.setContentPane(calculatorPanel);
-        frame.revalidate();
+        calculatorPanel.revalidate();
+        calculatorPanel.repaint();
+    }    
+    
+
+    private static void displayScientificCalculator(Container calculatorPanel) {
+        // Clear the calculator panel
+        calculatorPanel.removeAll();
+    
+        JComboBox<String> modeDropdown = new JComboBox<>(new String[]{"Mode 1", "Mode 2", "Mode 3"});
+        JTextField inputField = new JTextField();
+        inputField.setPreferredSize(new Dimension(300, 50));
+        inputField.setHorizontalAlignment(JTextField.RIGHT);
+        inputField.setFont(new Font("Arial", Font.PLAIN, 20));
+    
+        // Create a panel for the input field and dropdown list
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints inputGbc = new GridBagConstraints();
+        inputGbc.gridx = 0;
+        inputGbc.gridy = 0;
+        inputPanel.add(inputField, inputGbc);
+        
+        inputGbc.gridy = 1;
+        inputPanel.add(modeDropdown, inputGbc);
+    
+        // Add the input panel to the calculator panel
+        calculatorPanel.add(inputPanel);
+    
+        // Disable direct input
+        inputField.setEditable(false);
+    
+        JPanel buttonPanel = new JPanel(new GridLayout(5, 4, 5, 5)); // Increase rows to accommodate additional buttons
+    
+        String[] buttonLabels = {
+                "sin", "cos", "tan", "x^2",
+                "log", "ln", "sqrt", "^",
+                "pi", "e", "(", ")",
+                "0", ".", "=", "/"
+        };
+    
+        modeDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedMode = (String) modeDropdown.getSelectedItem();
+                switch (selectedMode) {
+                    case "Mode 1":
+                        displayStandardCalculator(calculatorPanel);
+                        break;
+                    case "Mode 2":
+                        displayScientificCalculator(calculatorPanel);
+                        break;
+                    case "Mode 3":
+                        // Display programmer calculator interface
+                        break;
+                    default:
+                        break;
+                }
+                modeDropdown.setSelectedItem(selectedMode); // Update the selected item
+            }
+        });        
+        
+    
+        for (String label : buttonLabels) {
+            JButton button = new JButton(label);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String buttonText = ((JButton) e.getSource()).getText();
+                    if (buttonText.equals("=")) {
+                        calculate(inputField);
+                    } else if (buttonText.equals("C")) {
+                        inputField.setText("");
+                    } else if (buttonText.equals("Del")) {
+                        String currentText = inputField.getText();
+                        if (!currentText.isEmpty()) {
+                            inputField.setText(currentText.substring(0, currentText.length() - 1));
+                        }
+                    } else {
+                        if (buttonText.equals("sin")) {
+                            inputField.setText(String.valueOf(Math.sin(Double.parseDouble(inputField.getText()))));
+                        } else if (buttonText.equals("cos")) {
+                            inputField.setText(String.valueOf(Math.cos(Double.parseDouble(inputField.getText()))));
+                        } else if (buttonText.equals("tan")) {
+                            inputField.setText(String.valueOf(Math.tan(Double.parseDouble(inputField.getText()))));
+                        } else if (buttonText.equals("log")) {
+                            inputField.setText(String.valueOf(Math.log10(Double.parseDouble(inputField.getText()))));
+                        } else if (buttonText.equals("ln")) {
+                            inputField.setText(String.valueOf(Math.log(Double.parseDouble(inputField.getText()))));
+                        } else if (buttonText.equals("sqrt")) {
+                            inputField.setText(String.valueOf(Math.sqrt(Double.parseDouble(inputField.getText()))));
+                        } else if (buttonText.equals("^")) {
+                            // Implement exponentiation logic here
+                        } else if (buttonText.equals("pi")) {
+                            inputField.setText(String.valueOf(Math.PI));
+                        } else if (buttonText.equals("e")) {
+                            inputField.setText(String.valueOf(Math.E));
+                        } else {
+                            inputField.setText(inputField.getText() + buttonText);
+                        }
+                    }
+                }
+            });
+            buttonPanel.add(button);
+        }
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
+        calculatorPanel.add(buttonPanel, gbc);
+    
+        calculatorPanel.revalidate();
+        calculatorPanel.repaint();
     }
     
 
@@ -222,22 +307,22 @@ public class Main {
             inputField.setText("Error");
         }
     }
-
+    
     private static double evaluateExpression(String expression) {
         // Implement the custom expression parser and evaluator here
         // For simplicity, let's just evaluate the expression as a mathematical expression
         return evaluateMathExpression(expression);
     }
-
+    
     private static double evaluateMathExpression(String expression) {
         try {
             return new Object() {
                 int pos = -1, ch;
-
+    
                 void nextChar() {
                     ch = (++pos < expression.length()) ? expression.charAt(pos) : -1;
                 }
-
+    
                 boolean eat(int charToEat) {
                     while (ch == ' ') nextChar();
                     if (ch == charToEat) {
@@ -246,14 +331,14 @@ public class Main {
                     }
                     return false;
                 }
-
+    
                 double parse() {
                     nextChar();
                     double x = parseExpression();
                     if (pos < expression.length()) throw new IllegalArgumentException("Unexpected: " + (char) ch);
                     return x;
                 }
-
+    
                 // Grammar:
                 // expression = term | expression `+` term | expression `-` term
                 // term = factor | term `*` factor | term `/` factor
@@ -267,7 +352,7 @@ public class Main {
                         else return x;
                     }
                 }
-
+    
                 double parseTerm() {
                     double x = parseFactor();
                     for (; ; ) {
@@ -276,11 +361,11 @@ public class Main {
                         else return x;
                     }
                 }
-
+    
                 double parseFactor() {
                     if (eat('+')) return parseFactor(); // unary plus
                     if (eat('-')) return -parseFactor(); // unary minus
-
+    
                     double x;
                     int startPos = this.pos;
                     if (eat('(')) { // parentheses
@@ -292,7 +377,7 @@ public class Main {
                     } else {
                         throw new IllegalArgumentException("Unexpected: " + (char) ch);
                     }
-
+    
                     return x;
                 }
             }.parse();
@@ -300,4 +385,7 @@ public class Main {
             throw new IllegalArgumentException("Invalid expression");
         }
     }
+    
+    
+    
 }
