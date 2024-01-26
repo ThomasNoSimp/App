@@ -19,5 +19,7 @@ __Using terminal:__
 ```bash
 
 git clone https://github.com/ThomasNoSimp/App.git
+cd App
+java -jar Calculator.jar
 
 ```
