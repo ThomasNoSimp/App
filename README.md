@@ -1,5 +1,3 @@
 # Calculator App
 
-```javascript
-const k = for(dough);
-```
+<h5><strong>Table of contents</strong></h5>
