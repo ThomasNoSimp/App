@@ -5,7 +5,7 @@
 <ul>
     <li><a href="#features">Features</a></li>
     <li><a href="#installation">Installation</a></li>
-    <li><a href="#Developers's Words">Developer's Words</a></li>
+    <li><a href="#developers-words">Developer's Words</a></li>
 </ul>
 
 ### Features
