@@ -36,5 +36,5 @@ __Downloading ZIP__
 
 <ul>
     <li>Please support me for more improvements!</li>
-    <li><br>Feedback and suggestions are warmly welcome!</li>
+    <li>Feedback and suggestions are warmly welcome!</li>
 </ul>
