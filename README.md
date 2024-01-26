@@ -3,9 +3,12 @@
 ### Table of contents
 
 <ul>
-    <li><a href="#">Features</a></li>
+    <li><a href="#features">Features</a></li>
 </ul>
 
-<Main-Body>
-
-</Main-Body>
+<Features id="features">
+    <p>**Features:**</p>
+    - Standard Calculator included!
+    - Scientific Calculator included!
+    - Programmer Calculator included! (Not available yet: Working on it.)
+</Features>
