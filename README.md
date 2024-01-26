@@ -15,7 +15,7 @@
 
 ### Installation
 
-** Using terminal: **
+__Using terminal:__
 ```bash
 
 git clone https://github.com/ThomasNoSimp/App.git
