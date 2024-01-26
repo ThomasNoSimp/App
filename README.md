@@ -5,6 +5,7 @@
 <ul>
     <li><a href="#features">Features</a></li>
     <li><a href="#installation">Installation</a></li>
+    <li><a href="#Developers's Words">Developer's Words</a></li>
 </ul>
 
 ### Features
@@ -23,3 +24,16 @@ cd App
 java -jar Calculator.jar
 
 ```
+
+__Downloading ZIP__
+
+- Manually download the zip file of the repository.
+- Extract it in the folder or directory.
+- Complie the Java file.
+- Run 'Calculator.jar'.
+
+### Developer's Words
+
+<ul>
+    <li>Please support me for more improvements! <br>Feedback and suggestions are warmly welcome!</li>
+</ul>
