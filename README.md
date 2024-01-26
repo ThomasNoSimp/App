@@ -35,5 +35,6 @@ __Downloading ZIP__
 ### Developer's Words
 
 <ul>
-    <li>Please support me for more improvements! <br>Feedback and suggestions are warmly welcome!</li>
+    <li>Please support me for more improvements!</li>
+    <li><br>Feedback and suggestions are warmly welcome!</li>
 </ul>
